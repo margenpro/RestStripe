@@ -12,33 +12,22 @@ app.use(cors({origin: true}))
 app.use(express.static("."));
 app.use(express.json());
 
+app.get("/a" , (req, res) =>{
+  res.send("Heeeeeeeeeeeee")
+})
+
 app.post('/api/pay', async (req, res) => {
+console.log("wgsgsdgdsgdsgsd");
 
-  let token = await stripe.tokens.create({
-    card: {
-      number: '4242424242424242',
-      exp_month: 5,
-      exp_year: 2022,
-      cvc: '314',
-    },
-  })
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: 60,
-    currency: 'usd',
-    payment_method_types: ['card'],
-  });
-
-  console.log(paymentIntent.client_secret)
 
     return stripe.charges
       .create({
         amount: 60, // Unit: cents
-        currency: paymentIntent.currency,
-        source: token.id,
+        currency: "cad",
+        source: req.body.token,
         description: 'Test payment',
       })
-      .then(result => res.send({clientSecret: paymentIntent.client_secret}))
+      .then(result => res.send({}))
       .catch(err => console.log("EROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR" + err));
   });
 
