@@ -27,8 +27,8 @@ console.log("wgsgsdgdsgdsgsd");
         source: req.body.token,
         description: 'Test payment',
       })
-      .then(result => res.send({}))
-      .catch(err => console.log("EROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR" + err));
+      .then(result => res.status(200).send({status:result.status}))
+      .catch(err => res.status(402).send({code: err.decline_code}));
   });
 
 app.listen(port, () => {
