@@ -12,22 +12,21 @@ app.use(cors({origin: true}))
 app.use(express.static("."));
 app.use(express.json());
 
-app.get("/a" , (req, res) =>{
-  res.send("Heeeeeeeeeeeee")
-})
-
 app.post('/api/pay', async (req, res) => {
-console.log("wgsgsdgdsgdsgsd");
-
 
     return stripe.charges
       .create({
         amount: 60, // Unit: cents
         currency: "cad",
-        source: req.body.token,
+        source: req.body.token.tokenId,
         description: 'Test payment',
+        
       })
-      .then(result => res.status(200).send({status:result.status}))
+      .then(result => {
+        console.log("Done!");
+        console.log(result);
+        res.status(200).send({status:result.status})
+      })
       .catch(err => res.status(402).send({code: err.decline_code}));
   });
 

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/margenpro/RestStripe#readme",
   "dependencies": {
+    "nodemailer": "^6.6.1",
     "stripe": "^8.148.0"
   }
 }
