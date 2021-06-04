@@ -57,6 +57,10 @@ app.post("/api/pay", async (req, res) => {
     .catch((err) => res.status(402).send({ code: err.decline_code }));
 });
 
+app.get((req, res), () => {
+  res.send("Test get! :D");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
