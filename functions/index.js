@@ -57,7 +57,7 @@ app.post("/api/pay", async (req, res) => {
     .catch((err) => res.status(402).send({ code: err.decline_code }));
 });
 
-app.get((req, res), () => {
+app.get("/api/test", (req, res) => {
   res.send("Test get! :D");
 });
 
