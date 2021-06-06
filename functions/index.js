@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const Stripe = require("stripe");
-const { creds } = require("../creds.json");
+const { creds } = require("./creds.json");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const { apiKey } = require("./apikey.json");
