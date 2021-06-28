@@ -24,8 +24,8 @@ app.post("/api/email", async (req, res) => {
     secure: false, // true for 465, false for other ports
     auth: {
       user: creds.email,
-      pass: creds.pass,
-    },
+      pass: creds.pass
+    }
   });
 
   try {
@@ -33,7 +33,7 @@ app.post("/api/email", async (req, res) => {
       from: creds.email, // sender address
       to: user.email, // list of receivers
       subject: "Successful Registration", // Subject line
-      text: `Hi ${user.username}! Thank you so much for joining us! This are your credentials:\nUsername: ${user.username}\nEmail: ${user.email}`,
+      text: `Hi ${user.username}! Thank you so much for joining us! This are your credentials:\nUsername: ${user.username}\nEmail: ${user.email}`
     });
     console.log("Email Sent!");
   } catch (error) {
@@ -42,19 +42,31 @@ app.post("/api/email", async (req, res) => {
 });
 
 app.post("/api/pay", async (req, res) => {
-  return stripe.charges
-    .create({
-      amount: 60, // Unit: cents
+  try {
+    const card = req.body.token.Card;
+    const exp = card.expiry.split("/");
+
+    const tokenCard = {
+      number: card.number,
+      exp_month: exp[0],
+      exp_year: exp[1],
+      cvc: card.cvc
+    };
+
+    const token = await stripe.tokens.create({
+      card: tokenCard
+    });
+
+    const result = await stripe.charges.create({
+      amount: 60, //Unit: cents
       currency: "cad",
-      source: req.body.token.tokenId,
-      description: "Test payment",
-    })
-    .then((result) => {
-      console.log("Done!");
-      console.log(result);
-      res.status(200).send({ status: result.status });
-    })
-    .catch((err) => res.status(402).send({ code: err.decline_code }));
+      source: token.id,
+      description: "Test payment"
+    });
+    res.status(200).send({ status: result.status });
+  } catch (err) {
+    res.status(402).send({ code: err.message });
+  }
 });
 
 app.get("/api/test", (req, res) => {
